@@ -69,3 +69,55 @@ class Platform {
     x = 0;
     y = 0;
   }
+void position(float tx, float ty) {
+
+    x = tx;
+    y = ty;
+    z = -100;
+
+    an = 0;
+  }
+
+  void update(float ux, float uy) {
+
+    float mdist = dist(ux, uy, x, y);
+
+    float lift = map(mdist, 0, affect, PI, 0);
+    
+    float easing = map(mdist, 0, affect, .25, .01);
+    
+    if(easing < .01){
+      easing = .01;
+    }
+    
+    if(easing > 1){
+      easing = 1;
+    }
+
+    if (mdist < affect) {
+      an += (lift - an) * easing;
+    } else {
+      an += (0 - an) * easing;
+    }
+    
+    if(mousePressed){
+      an += (0 - an) * .1;
+    }
+
+
+    z = -100 + ((50 * cos(an))*map(zPos,0,-115,0,1));
+  }
+
+  void display() {
+    noStroke();
+    fill(0, map(an,0,PI,255,100), 0);
+    pushMatrix();
+    translate(x, y, z); 
+    box(22);
+    popMatrix();
+  }
+
+  float getAngle() {
+    return(an);
+  }
+}
